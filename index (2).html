@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Noah's Bin Wash – Maribyrnong</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #0b1f3a;
+      --blue:    #1463ff;
+      --sky:     #4db8ff;
+      --white:   #f4f8ff;
+      --grey:    #8fa3bf;
+      --accent:  #00e5c0;
+      --card-bg: #111f35;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--navy);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 2.5rem;
+      background: rgba(11,31,58,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(77,184,255,0.12);
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; letter-spacing: 2px;
+      color: var(--sky);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .logo span { color: var(--accent); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav a {
+      color: var(--grey); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500; letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      padding: 7rem 2.5rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 60% at 80% 50%, rgba(20,99,255,0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(0,229,192,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      background: rgba(0,229,192,0.12);
+      border: 1px solid rgba(0,229,192,0.35);
+      color: var(--accent);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem; border-radius: 999px;
+      margin-bottom: 1.4rem;
+      animation: fadeUp 0.6s ease both;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.2rem, 9vw, 7rem);
+      line-height: 0.95; letter-spacing: 2px;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+    .hero h1 .highlight { color: var(--sky); }
+    .hero h1 .accent    { color: var(--accent); }
+    .hero p {
+      max-width: 480px;
+      margin: 1.6rem 0 2.4rem;
+      color: var(--grey); font-size: 1.05rem; line-height: 1.7;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+    .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.7s 0.3s ease both; }
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem; border-radius: 6px;
+      font-weight: 700; font-size: 0.95rem;
+      text-decoration: none; cursor: pointer;
+      border: none; transition: transform 0.15s, box-shadow 0.15s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary {
+      background: var(--blue); color: #fff;
+      box-shadow: 0 4px 24px rgba(20,99,255,0.4);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(20,99,255,0.5); }
+    .btn-outline {
+      background: transparent; color: var(--sky);
+      border: 1.5px solid var(--sky);
+    }
+    .btn-outline:hover { background: rgba(77,184,255,0.08); transform: translateY(-2px); }
+
+    .drops {
+      position: absolute; right: 6%; top: 50%;
+      transform: translateY(-50%);
+      font-size: 8rem; opacity: 0.07;
+      user-select: none; pointer-events: none;
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float { 0%,100%{transform:translateY(-50%)} 50%{transform:translateY(-55%)} }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2.5rem; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 1px; line-height: 1.1; margin-bottom: 1.2rem;
+    }
+    .section-sub { color: var(--grey); max-width: 520px; line-height: 1.7; }
+
+    /* ── PRICING ── */
+    #pricing { background: rgba(255,255,255,0.02); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .price-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(77,184,255,0.12);
+      border-radius: 12px; padding: 2rem 1.8rem 1.6rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+      display: flex; flex-direction: column;
+    }
+    .price-card:hover { transform: translateY(-4px); border-color: rgba(77,184,255,0.4); }
+    .price-card.featured { border-color: var(--accent); box-shadow: 0 0 40px rgba(0,229,192,0.12); }
+    .price-card.featured::after {
+      content: 'POPULAR';
+      position: absolute; top: 1rem; right: 1rem;
+      background: var(--accent); color: var(--navy);
+      font-size: 0.65rem; font-weight: 800; letter-spacing: 1.5px;
+      padding: 0.2rem 0.6rem; border-radius: 4px;
+    }
+    .card-icon { font-size: 2rem; margin-bottom: 1rem; }
+    .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 1px; margin-bottom: 0.4rem; }
+    .card-price { font-size: 2.6rem; font-weight: 800; color: var(--sky); line-height: 1; margin-bottom: 0.3rem; }
+    .card-price span { font-size: 1rem; font-weight: 400; color: var(--grey); }
+    .card-desc { color: var(--grey); font-size: 0.88rem; line-height: 1.6; margin-top: 0.8rem; flex: 1; }
+    .card-book-btn {
+      margin-top: 1.4rem; width: 100%; padding: 0.7rem 1rem;
+      border-radius: 7px; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.9rem;
+      background: var(--blue); color: #fff;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .card-book-btn:hover { background: #0f52d4; transform: translateY(-1px); }
+
+    /* ── WHY ── */
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem; }
+    .why-item { display: flex; flex-direction: column; gap: 0.6rem; }
+    .why-icon {
+      width: 44px; height: 44px;
+      background: rgba(20,99,255,0.15); border: 1px solid rgba(20,99,255,0.3);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    }
+    .why-title { font-weight: 700; font-size: 1rem; }
+    .why-text { color: var(--grey); font-size: 0.88rem; line-height: 1.6; }
+
+    /* ── HOW IT WORKS ── */
+    #how { background: rgba(255,255,255,0.02); }
+    .steps { display: flex; flex-direction: column; gap: 2rem; margin-top: 3rem; max-width: 600px; }
+    .step { display: flex; gap: 1.5rem; align-items: flex-start; }
+    .step-num {
+      font-family: 'Bebas Neue', sans-serif; font-size: 3rem;
+      color: rgba(77,184,255,0.2); line-height: 1; flex-shrink: 0; width: 3rem; text-align: center;
+    }
+    .step-body h3 { font-weight: 700; margin-bottom: 0.3rem; }
+    .step-body p { color: var(--grey); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── CONTACT ── */
+    #contact { text-align: center; }
+    .contact-box {
+      max-width: 500px; margin: 2.5rem auto 0;
+      background: var(--card-bg); border: 1px solid rgba(77,184,255,0.15);
+      border-radius: 16px; padding: 2.5rem 2rem;
+    }
+    .contact-box p { color: var(--grey); margin-bottom: 1.5rem; line-height: 1.7; }
+    .suburb-tag {
+      display: inline-block;
+      background: rgba(20,99,255,0.12); border: 1px solid rgba(20,99,255,0.3);
+      color: var(--sky); font-size: 0.8rem; font-weight: 600; letter-spacing: 1px;
+      padding: 0.3rem 0.8rem; border-radius: 999px; margin: 0.3rem;
+    }
+
+    /* ── FOOTER ── */
+    footer { text-align: center; padding: 2rem; border-top: 1px solid rgba(255,255,255,0.06); color: var(--grey); font-size: 0.8rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════
+       MODAL
+    ══════════════════════════════ */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(5,14,28,0.82);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: #0e1d33;
+      border: 1px solid rgba(77,184,255,0.2);
+      border-radius: 16px; padding: 2.2rem 2rem;
+      width: 100%; max-width: 460px;
+      position: relative; overflow-y: auto; max-height: 90vh;
+      transform: translateY(20px); transition: transform 0.25s;
+    }
+    .modal-overlay.open .modal { transform: translateY(0); }
+
+    .modal-close {
+      position: absolute; top: 1rem; right: 1.1rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--grey); font-size: 1.4rem; line-height: 1; transition: color 0.15s;
+    }
+    .modal-close:hover { color: var(--white); }
+
+    .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1px; margin-bottom: 0.3rem; }
+    .modal-sub { color: var(--grey); font-size: 0.88rem; margin-bottom: 1.6rem; }
+
+    /* radio */
+    .radio-group { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
+    .radio-label {
+      display: flex; align-items: center; gap: 0.9rem;
+      background: rgba(255,255,255,0.04); border: 1.5px solid rgba(77,184,255,0.12);
+      border-radius: 8px; padding: 0.8rem 1rem;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s; user-select: none;
+    }
+    .radio-label:hover { border-color: rgba(77,184,255,0.35); }
+    .radio-label input[type="radio"] { display: none; }
+    .radio-label.checked { border-color: var(--accent); background: rgba(0,229,192,0.07); }
+    .radio-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--grey); flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; transition: border-color 0.2s;
+    }
+    .radio-label.checked .radio-dot { border-color: var(--accent); }
+    .radio-dot::after {
+      content: ''; width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); opacity: 0; transition: opacity 0.15s;
+    }
+    .radio-label.checked .radio-dot::after { opacity: 1; }
+    .radio-info { flex: 1; }
+    .radio-name { font-weight: 700; font-size: 0.95rem; }
+    .radio-price { color: var(--sky); font-size: 0.85rem; margin-top: 0.1rem; }
+
+    /* inputs */
+    .field { margin-bottom: 1.1rem; }
+    .field label { display: block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; color: var(--grey); margin-bottom: 0.4rem; text-transform: uppercase; }
+    .field input, .field textarea {
+      width: 100%; padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.05); border: 1.5px solid rgba(77,184,255,0.15);
+      border-radius: 8px; color: var(--white);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--sky); }
+    .field textarea { resize: vertical; min-height: 80px; }
+
+    .modal-submit {
+      width: 100%; padding: 0.9rem; border-radius: 8px; border: none; cursor: pointer;
+      background: var(--blue); color: #fff;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 1.5px;
+      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 24px rgba(20,99,255,0.35);
+    }
+    .modal-submit:hover { background: #0f52d4; transform: translateY(-1px); }
+
+    /* thank you */
+    .thankyou {
+      display: none; flex-direction: column;
+      align-items: center; text-align: center; gap: 1rem; padding: 1rem 0;
+    }
+    .thankyou.show { display: flex; }
+    .thankyou .ty-icon { font-size: 3.5rem; animation: pop 0.4s ease; }
+    @keyframes pop { 0%{transform:scale(0.5)} 70%{transform:scale(1.15)} 100%{transform:scale(1)} }
+    .thankyou h2 { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 1px; color: var(--accent); }
+    .thankyou p { color: var(--grey); line-height: 1.7; max-width: 320px; }
+    .thankyou .btn { margin-top: 0.5rem; }
+
+    @media (max-width: 600px) {
+      nav ul { display: none; }
+      .drops { display: none; }
+      section { padding: 4rem 1.4rem; }
+      .modal { padding: 1.8rem 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🚿 Noah's <span>BinWash</span></div>
+  <ul>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#why">Why Us</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="drops">🗑️</div>
+  <div class="hero-badge">📍 Serving Maribyrnong &amp; surrounds</div>
+  <h1>
+    <span class="highlight">Clean Bins.</span><br>
+    <span class="accent">Fresh Street.</span><br>
+    Every Week.
+  </h1>
+  <p>Professional pressure washing for your wheelie bins — smelling clean, looking great. Booked and done while you're at work.</p>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="openModal(null)">Book a Wash</button>
+    <a href="#pricing" class="btn btn-outline">See Pricing</a>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple. Flat Rate.</h2>
+  <p class="section-sub">No hidden fees, no contracts — just clean bins at a fair price.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="card-icon">🗑️</div>
+      <div class="card-title">Single Bin</div>
+      <div class="card-price">$7 <span>/ bin</span></div>
+      <div class="card-desc">One wheelie bin pressure washed and deodorised. Perfect for a one-off clean.</div>
+      <button class="card-book-btn" onclick="openModal('single')">Book This →</button>
+    </div>
+    <div class="price-card featured">
+      <div class="card-icon">🗑️🗑️</div>
+      <div class="card-title">Two Bins</div>
+      <div class="card-price">$14 <span>/ visit</span></div>
+      <div class="card-desc">Your general waste and recycling bin — both sparkling clean in one go.</div>
+      <button class="card-book-btn" onclick="openModal('double')">Book This →</button>
+    </div>
+    <div class="price-card">
+      <div class="card-icon">🗑️🗑️🗑️</div>
+      <div class="card-title">Three Bins</div>
+      <div class="card-price">$21 <span>/ visit</span></div>
+      <div class="card-desc">All three household bins cleaned at once. Best value for the full set.</div>
+      <button class="card-book-btn" onclick="openModal('triple')">Book This →</button>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="section-label">Why Choose Us</div>
+  <h2 class="section-title">Why Noah's BinWash?</h2>
+  <p class="section-sub">Local, reliable, and genuinely thorough — your bins deserve better.</p>
+  <div class="why-grid">
+    <div class="why-item">
+      <div class="why-icon">💧</div>
+      <div class="why-title">High-Pressure Clean</div>
+      <div class="why-text">We blast away grime, mould, and bacteria with a proper pressure washer — not just a rinse.</div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">🌿</div>
+      <div class="why-title">Eco-Friendly</div>
+      <div class="why-text">We use biodegradable deodorisers safe for your garden, kids, and pets.</div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">📍</div>
+      <div class="why-title">Local to You</div>
+      <div class="why-text">Based in Maribyrnong — we know the streets and we show up when we say we will.</div>
+    </div>
+    <div class="why-item">
+      <div class="why-icon">💰</div>
+      <div class="why-title">Unbeatable Price</div>
+      <div class="why-text">At just $7 a bin, it's the easiest household upgrade you'll ever make.</div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="section-label">Process</div>
+  <h2 class="section-title">How It Works</h2>
+  <p class="section-sub">Three easy steps and your bins go from gross to gleaming.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h3>Get in Touch</h3>
+        <p>Click "Book a Wash", pick your package, and fill in your details.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h3>We Come to You</h3>
+        <p>Leave your bins out on collection day — we'll clean them right there on your nature strip.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h3>Pay &amp; Enjoy</h3>
+        <p>Cash or bank transfer on the day. Simple as that — no accounts, no subscriptions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-label">Get In Touch</div>
+  <h2 class="section-title">Book Your Wash</h2>
+  <div class="contact-box">
+    <p>Ready for clean bins? Hit the button below, choose your package, and send through your details!</p>
+    <button class="btn btn-primary" style="margin-bottom:1.6rem;" onclick="openModal(null)">📅 Book a Wash Now</button>
+    <p style="margin-bottom:1rem; font-size:0.85rem;">Servicing these areas:</p>
+    <div>
+      <span class="suburb-tag">Maribyrnong</span>
+      <span class="suburb-tag">Footscray</span>
+      <span class="suburb-tag">Seddon</span>
+      <span class="suburb-tag">Yarraville</span>
+      <span class="suburb-tag">Spotswood</span>
+      <span class="suburb-tag">Maidstone</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Noah's BinWash · Maribyrnong, VIC · All rights reserved.</p>
+</footer>
+
+<!-- ══════ MODAL ══════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="overlayClick(event)">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
+
+    <!-- FORM -->
+    <div id="formView">
+      <h2 id="modalTitle">Book a Wash</h2>
+      <p class="modal-sub">Pick your package below, fill in your details, and we'll confirm your booking.</p>
+
+      <div class="radio-group">
+        <label class="radio-label" data-value="single" onclick="selectPlan(this)">
+          <input type="radio" name="plan" value="single"/>
+          <div class="radio-dot"></div>
+          <div class="radio-info">
+            <div class="radio-name">🗑️ Single Bin</div>
+            <div class="radio-price">$7 per bin</div>
+          </div>
+        </label>
+        <label class="radio-label" data-value="double" onclick="selectPlan(this)">
+          <input type="radio" name="plan" value="double"/>
+          <div class="radio-dot"></div>
+          <div class="radio-info">
+            <div class="radio-name">🗑️🗑️ Two Bins</div>
+            <div class="radio-price">$14 per visit</div>
+          </div>
+        </label>
+        <label class="radio-label" data-value="triple" onclick="selectPlan(this)">
+          <input type="radio" name="plan" value="triple"/>
+          <div class="radio-dot"></div>
+          <div class="radio-info">
+            <div class="radio-name">🗑️🗑️🗑️ Three Bins</div>
+            <div class="radio-price">$21 per visit</div>
+          </div>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="nameInput">Your Name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Sarah Johnson" autocomplete="name"/>
+      </div>
+      <div class="field">
+        <label for="emailInput">Your Email</label>
+        <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email"/>
+      </div>
+      <div class="field">
+        <label for="addressInput">Your Street Address</label>
+        <input type="text" id="addressInput" placeholder="e.g. 12 Smith St, Footscray"/>
+      </div>
+      <div class="field">
+        <label for="messageInput">Anything else? (optional)</label>
+        <textarea id="messageInput" placeholder="e.g. bin is around the side gate, prefer Tuesday collections…"></textarea>
+      </div>
+
+      <button class="modal-submit" onclick="submitBooking()">SEND BOOKING REQUEST</button>
+    </div>
+
+    <!-- THANK YOU -->
+    <div class="thankyou" id="thankyouView">
+      <div class="ty-icon">✅</div>
+      <h2>You're Booked In!</h2>
+      <p>Your email app should have opened with all the booking details pre-filled. Just hit send and Noah will confirm your time shortly.</p>
+      <button class="btn btn-primary" onclick="closeModal()">Back to Site</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ── PUT YOUR REAL EMAIL HERE ──
+  const BUSINESS_EMAIL = 'your@email.com';
+
+  const planLabels = {
+    single: 'Single Bin — $7',
+    double: 'Two Bins — $14',
+    triple: 'Three Bins — $21',
+  };
+
+  function openModal(planKey) {
+    // Reset to form view
+    document.getElementById('formView').style.display = '';
+    document.getElementById('thankyouView').classList.remove('show');
+    // Clear selection
+    document.querySelectorAll('.radio-label').forEach(l => l.classList.remove('checked'));
+    // Auto-select plan if provided
+    if (planKey) {
+      const target = document.querySelector(`.radio-label[data-value="${planKey}"]`);
+      if (target) target.classList.add('checked');
+    }
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function overlayClick(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  function selectPlan(el) {
+    document.querySelectorAll('.radio-label').forEach(l => l.classList.remove('checked'));
+    el.classList.add('checked');
+  }
+
+  function submitBooking() {
+    const selected = document.querySelector('.radio-label.checked');
+    const name     = document.getElementById('nameInput').value.trim();
+    const email    = document.getElementById('emailInput').value.trim();
+    const address  = document.getElementById('addressInput').value.trim();
+    const message  = document.getElementById('messageInput').value.trim();
+
+    if (!selected) { alert('Please choose a package first.'); return; }
+    if (!name)     { alert('Please enter your name.'); return; }
+    if (!email)    { alert('Please enter your email address.'); return; }
+    if (!address)  { alert('Please enter your street address.'); return; }
+
+    const planLabel = planLabels[selected.dataset.value];
+    const subject   = encodeURIComponent(`Bin Wash Booking – ${planLabel}`);
+    const body      = encodeURIComponent(
+`Hi Noah,
+
+I'd like to book a bin wash.
+
+Package: ${planLabel}
+Name: ${name}
+Email: ${email}
+Address: ${address}
+${message ? '\nExtra info:\n' + message : ''}
+
+Please get back to me to confirm a time.
+
+Thanks,
+${name}`
+    );
+
+    window.location.href = `mailto:${BUSINESS_EMAIL}?subject=${subject}&body=${body}`;
+
+    // Show thank you after a brief delay (gives mailto time to open)
+    setTimeout(() => {
+      document.getElementById('formView').style.display = 'none';
+      document.getElementById('thankyouView').classList.add('show');
+    }, 700);
+  }
+
+  // Nav highlight on scroll
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(sec => { if (window.scrollY >= sec.offsetTop - 120) current = sec.id; });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.price-card, .why-item, .step, .contact-box').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
